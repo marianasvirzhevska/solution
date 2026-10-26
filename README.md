@@ -2,6 +2,8 @@
 
 A small app: login + session, a webhooks list, and an edit dialog — built against a hand-written MSW mock of the API contract in the task brief. Scope matches the brief: no monorepo, no backend, no heavy infrastructure. The interesting part is the HTTP/session layer; the UI is intentionally plain (the brief explicitly says design isn't graded).
 
+Built with Claude Code as a pair-programming tool — architecture, technical decisions, and review (including catching a few real bugs along the way) are mine.
+
 ## Quick start
 
 Requires Node 20.19+ and pnpm 10 (`corepack enable` picks up the pinned version from `package.json`).

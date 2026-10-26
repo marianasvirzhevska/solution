@@ -7,7 +7,7 @@ import { mockControls } from '@/mocks/db';
 import { server } from '@/mocks/node';
 
 const EMAIL = 'demo@smartsender.io';
-const PASSWORD = 'Password123!';
+const PASSWORD = 'mock-pass-123!';
 
 let sessionExpiredCount = 0;
 registerSessionExpiredHandler(() => {

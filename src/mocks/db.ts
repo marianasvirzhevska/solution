@@ -7,7 +7,7 @@ const PENDING_TOKEN_TTL_MS = 60_000;
 export const USER = {
   id: 'usr_1',
   email: 'demo@smartsender.io',
-  password: 'Password123!',
+  password: 'mock-pass-123!',
   firstName: 'Demo',
   lastName: 'User',
 } as const;

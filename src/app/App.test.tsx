@@ -1,11 +1,27 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+
+import { mockControls } from '@/mocks/db';
+import { server } from '@/mocks/node';
 
 import { App } from './App';
 
-describe('App (smoke)', () => {
-  it('renders the heading', () => {
+beforeAll(() => {
+  server.listen({ onUnhandledFrame: 'error' });
+});
+
+afterEach(() => {
+  server.resetHandlers();
+  mockControls.reset();
+});
+
+afterAll(() => {
+  server.close();
+});
+
+describe('App', () => {
+  it('redirects an anonymous visitor to the login page', async () => {
     render(<App />);
-    expect(screen.getByRole('heading', { name: /webhooks/i })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /sign in/i })).toBeInTheDocument();
   });
 });

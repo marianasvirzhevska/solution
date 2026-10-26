@@ -5,7 +5,7 @@ import { server } from './node';
 
 const BASE_URL = location.origin;
 const EMAIL = 'demo@smartsender.io';
-const PASSWORD = 'Password123!';
+const PASSWORD = 'mock-pass-123!';
 const FINGERPRINT = 'a'.repeat(32);
 
 beforeAll(() => {

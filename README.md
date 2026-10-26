@@ -32,6 +32,8 @@ pnpm check        # typecheck + lint + format:check + test, all of the above
 4. **401** (on requests that opt into auth, i.e. not `/auth/login`/`/auth/token/*`) → `rotateOnce()`, a single-flight guard so concurrent 401s share exactly one `/auth/token/rotate` call, then retry the original request once. The rotate call itself is sent with `auth: false`, so a failed rotate can never trigger another rotate.
 5. A second 401 on the retry, or a failed rotate, calls a registered `onSessionExpired` callback and throws.
 
+This pipeline lives in one place (`request()`) and isn't specific to any one endpoint or HTTP method — every authenticated call goes through it, including the webhook edit form's `PUT`. So if the session expires while the edit dialog is open, clicking Save still rotates and retries transparently instead of failing; covered by a dedicated test (`rotates and retries a PUT too`) alongside the required parallel-401 case, since it's easy to special-case `GET` by accident and silently miss `POST`/`PUT`.
+
 The client never imports React or the router — `onSessionExpired` is a plain callback registered once by `AuthProvider`. It just flips auth state to `anonymous` and clears the query cache; the actual redirect is left to `RequireAuth` reacting to that state change (see below), not fired imperatively from the callback.
 
 **Token placement.** `device_session_token` lives only in a local variable inside the login mutation — never in state, storage, or the URL. `fingerprint` (32 hex chars, `crypto.getRandomValues`) is generated once and kept in `localStorage`, since it identifies the device, not the session. The session itself is opaque to the client — the mock holds it in memory, standing in for a real HttpOnly cookie.

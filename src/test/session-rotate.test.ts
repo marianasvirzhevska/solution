@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { authApi } from '@/features/auth/api';
+import { webhooksApi } from '@/features/webhooks/api';
 import { registerSessionExpiredHandler } from '@/shared/api/http-client';
 import { mockControls } from '@/mocks/db';
 import { server } from '@/mocks/node';
@@ -42,6 +43,19 @@ describe('session rotate', () => {
 
     expect(meA.email).toBe(EMAIL);
     expect(meB.email).toBe(EMAIL);
+    expect(mockControls.counters.rotate).toBe(1);
+  });
+
+  it('rotates and retries a PUT too (e.g. saving the edit form after the session expired)', async () => {
+    await logIn();
+    mockControls.expireSession();
+
+    const updated = await webhooksApi.update('wh_1', {
+      name: 'Renamed after expiry',
+      url: 'https://example.com/hooks/renamed',
+    });
+
+    expect(updated.name).toBe('Renamed after expiry');
     expect(mockControls.counters.rotate).toBe(1);
   });
 
